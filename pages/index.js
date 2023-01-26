@@ -27,6 +27,7 @@ export default function Home() {
       await getMintStatus()
     }, 5 * 1000)
     getProof()
+    console.log(rootHash)
   }
 
   const getProof = async() => {
