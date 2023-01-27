@@ -51,6 +51,7 @@ export default function Home() {
     })
     checkFreeMint()
     checkTotalFreeMinted()
+    getTotalAndMaxSupply()
     onPageLoad()
   }, [walletConnected])
 
