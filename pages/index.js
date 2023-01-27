@@ -189,6 +189,7 @@ export default function Home() {
       window.alert("Mint successful!")
     } catch (error) {
       console.error(error)
+      window.alert(error)
     }
   }
 
@@ -214,6 +215,7 @@ export default function Home() {
       window.alert("Mint successful!")
     } catch (error) {
       console.error(error)
+      window.alert(error)
     }
   }
 
