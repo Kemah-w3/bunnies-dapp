@@ -308,6 +308,18 @@ export default function Home() {
     }
   }
 
+  function renderSoldOut() {
+    console.log("Total amount minted", totalAmountMinted)
+    console.log("Max supply", maxSupply)
+    if(totalAmountMinted + 50 == maxSupply) {
+      return(
+        <div className={styles.title}>
+          Sold Out!
+        </div>
+      )
+    }
+  }
+
   return(
     <div className={styles.container}>
       <Head>
@@ -350,7 +362,7 @@ export default function Home() {
               <p>Mint Stage : {renderMintStatus()} </p>
               <p>{totalAmountMinted} / {maxSupply} have been minted</p>
             </div>
-            {renderMint()}
+            {(totalAmountMinted + 2009 >= maxSupply) ? renderSoldOut() : renderMint()}
           </div>
         </div>
       </div>
