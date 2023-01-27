@@ -20,7 +20,7 @@ export default function Home() {
   const [freeMinted, setFreeMinted] = useState(0)
   const [userAddress, setUserAddress] = useState("")
   const [merkleProof, setMerkleProof] = useState([])
-  const [totalAmountMinted, setTotalAmountMinted] = useState(0)
+  const [totalAmountMinted, setTotalAmountMinted] = useState(50)
   const [maxSupply, setMaxSupply] = useState(0)
 
   const onPageLoad = async() => {
