@@ -226,10 +226,10 @@ export default function Home() {
         provider
       )
 
-      const _totalSupply = await bunniesContract.totalSupply()
-      const _maxSupply = await bunniesContract.maxSupply()
-      setMaxSupply(_maxSupply.toNumber())
-      setTotalAmountMinted(_totalSupply.toNumber())
+      const _totalSupply = (await bunniesContract.totalSupply()).toNumber()
+      const _maxSupply = (await bunniesContract.maxSupply()).toNumber()
+      setMaxSupply(_maxSupply)
+      setTotalAmountMinted(_totalSupply)
       console.log("max supply 2", maxSupply)
       console.log("total supply 2", totalAmountMinted)
     } catch (error) {
