@@ -16,6 +16,7 @@ export default function Home() {
   const [publicMintStage, setPublicMintStage] = useState(false)
   // const [merkleRoot, setMerkleRoot] = useState(rootHash)
   const [loading, setLoading] = useState(false)
+  const [mintedForFree, setMintedForFree] = useState(false)
   const [userAddress, setUserAddress] = useState("")
   const [merkleProof, setMerkleProof] = useState([])
   const [totalAmountMinted, setTotalAmountMinted] = useState(0)
@@ -26,6 +27,7 @@ export default function Home() {
       await getTotalAndMaxSupply()
       await getMintStatus()
     }, 5 * 1000)
+    checkFreeMint()
     getProof()
     console.log(rootHash)
   }
@@ -109,6 +111,22 @@ export default function Home() {
     }
   }
 
+  const checkFreeMint = async() => {
+    try {
+      const provider = await getProviderOrSigner()
+      const bunniesContract = new Contract(
+        BUNNIES_CONTRACT_ADDRESS,
+        BUNNIES_CONTRACT_ABI,
+        provider
+      )
+      const hasMintedFree = await bunniesContract.mintedFree(userAddress)
+      console.log(hasMintedFree)
+      setMintedForFree(hasMintedFree)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const callWhitelistMint = async() => {
     try {
       const signer = await getProviderOrSigner(true)
@@ -118,10 +136,19 @@ export default function Home() {
         signer
       )
       let mintPrice
-      if(quantity == 1) {
-        mintPrice = (utils.parseEther("0"))
-      } else if(quantity > 1) {
-        mintPrice = (utils.parseEther("0.007").mul(quantity - 1))
+
+      if(quantity > 1) {
+        if(!mintedForFree) {
+          mintPrice = (utils.parseEther("0.007")).mul(quantity - 1)
+        } else {
+          mintPrice = (utils.parseEther("0.007").mul(quantity))
+        }
+      } else if(quantity == 1) {
+        if(!mintedForFree) {
+          mintPrice = utils.parseEther("0")
+        } else {
+          mintPrice = (utils.parseEther("0.007").mul(quantity))
+        } 
       }
       // const mintPrice = (utils.parseEther("0.007").mul(quantity))
       const tx = await bunniesContract.mint(
