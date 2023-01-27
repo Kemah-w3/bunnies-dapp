@@ -20,7 +20,7 @@ export default function Home() {
   const [freeMinted, setFreeMinted] = useState(0)
   const [userAddress, setUserAddress] = useState("")
   const [merkleProof, setMerkleProof] = useState([])
-  const [totalAmountMinted, setTotalAmountMinted] = useState(50)
+  const [totalAmountMinted, setTotalAmountMinted] = useState(0)
   const [maxSupply, setMaxSupply] = useState(0)
 
   const onPageLoad = async() => {
@@ -361,7 +361,7 @@ export default function Home() {
             </p>
             <div>
               <p>Mint Stage : {renderMintStatus()} </p>
-              <p>{totalAmountMinted} / {maxSupply} have been minted</p>
+              <p>{totalAmountMinted + 50} / {maxSupply} have been minted</p>
             </div>
             {(totalAmountMinted + 2009 >= maxSupply) ? renderSoldOut() : renderMint()}
           </div>
