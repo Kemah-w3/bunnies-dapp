@@ -47,6 +47,7 @@ export default function Home() {
       providerOptions: {},
       disableInjectedProvider: false
     })
+    checkFreeMint()
     onPageLoad()
   }, [walletConnected])
 
