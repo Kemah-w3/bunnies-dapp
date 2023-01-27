@@ -17,6 +17,7 @@ export default function Home() {
   // const [merkleRoot, setMerkleRoot] = useState(rootHash)
   const [loading, setLoading] = useState(false)
   const [mintedForFree, setMintedForFree] = useState(false)
+  const [freeMinted, setFreeMinted] = useState(0)
   const [userAddress, setUserAddress] = useState("")
   const [merkleProof, setMerkleProof] = useState([])
   const [totalAmountMinted, setTotalAmountMinted] = useState(0)
@@ -28,6 +29,7 @@ export default function Home() {
       await getMintStatus()
     }, 5 * 1000)
     checkFreeMint()
+    checkTotalFreeMinted()
     getProof()
     console.log(rootHash)
   }
@@ -48,6 +50,7 @@ export default function Home() {
       disableInjectedProvider: false
     })
     checkFreeMint()
+    checkTotalFreeMinted()
     onPageLoad()
   }, [walletConnected])
 
@@ -128,6 +131,22 @@ export default function Home() {
     }
   }
 
+  const checkTotalFreeMinted = async() => {
+    try {
+      const provider = await getProviderOrSigner()
+      const bunniesContract = new Contract(
+        BUNNIES_CONTRACT_ADDRESS,
+        BUNNIES_CONTRACT_ABI,
+        provider
+      )
+      const totalFreeMinted = await bunniesContract.totalFreeMinted()
+      console.log(totalFreeMinted)
+      setFreeMinted(totalFreeMinted)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const callWhitelistMint = async() => {
     try {
       const signer = await getProviderOrSigner(true)
@@ -137,20 +156,24 @@ export default function Home() {
         signer
       )
       let mintPrice
-
-      if(quantity > 1) {
-        if(!mintedForFree) {
-          mintPrice = (utils.parseEther("0.007")).mul(quantity - 1)
-        } else {
-          mintPrice = (utils.parseEther("0.007").mul(quantity))
+      if (freeMinted <= 900) {
+        if(quantity > 1) {
+          if(!mintedForFree) {
+            mintPrice = (utils.parseEther("0.007")).mul(quantity - 1)
+          } else {
+            mintPrice = (utils.parseEther("0.007").mul(quantity))
+          }
+        } else if(quantity == 1) {
+          if(!mintedForFree) {
+            mintPrice = utils.parseEther("0")
+          } else {
+            mintPrice = (utils.parseEther("0.007").mul(quantity))
+          } 
         }
-      } else if(quantity == 1) {
-        if(!mintedForFree) {
-          mintPrice = utils.parseEther("0")
-        } else {
-          mintPrice = (utils.parseEther("0.007").mul(quantity))
-        } 
+      } else {
+        mintPrice = (utils.parseEther("0.007").mul(quantity))
       }
+      
       // const mintPrice = (utils.parseEther("0.007").mul(quantity))
       const tx = await bunniesContract.mint(
         quantity,
