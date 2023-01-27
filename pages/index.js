@@ -139,7 +139,7 @@ export default function Home() {
         BUNNIES_CONTRACT_ABI,
         provider
       )
-      const totalFreeMinted = await bunniesContract.totalFreeMinted()
+      const totalFreeMinted = (await bunniesContract.totalFreeMinted()).toNumber()
       console.log(totalFreeMinted)
       setFreeMinted(totalFreeMinted)
     } catch (error) {
