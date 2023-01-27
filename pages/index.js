@@ -117,7 +117,13 @@ export default function Home() {
         BUNNIES_CONTRACT_ABI,
         signer
       )
-      const mintPrice = (utils.parseEther("0.007").mul(quantity))
+      let mintPrice
+      if(quantity == 1) {
+        mintPrice = (utils.parseEther("0"))
+      } else if(quantity > 1) {
+        mintPrice = (utils.parseEther("0.007").mul(quantity - 1))
+      }
+      // const mintPrice = (utils.parseEther("0.007").mul(quantity))
       const tx = await bunniesContract.mint(
         quantity,
         merkleProof,
