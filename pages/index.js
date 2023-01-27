@@ -230,8 +230,8 @@ export default function Home() {
       const _maxSupply = (await bunniesContract.maxSupply()).toNumber()
       setMaxSupply(_maxSupply)
       setTotalAmountMinted(_totalSupply)
-      console.log("max supply 2", maxSupply)
-      console.log("total supply 2", totalAmountMinted)
+      console.log("max supply", maxSupply)
+      console.log("total supply", totalAmountMinted)
     } catch (error) {
       console.log(error)
     }
@@ -312,9 +312,7 @@ export default function Home() {
   }
 
   function renderSoldOut() {
-    console.log("Total amount minted", totalAmountMinted)
-    console.log("Max supply", maxSupply)
-    if(totalAmountMinted + 50 == maxSupply) {
+    if(totalAmountMinted + 2009 == maxSupply) {
       return(
         <div className={styles.title}>
           Sold Out!
