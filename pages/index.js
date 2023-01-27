@@ -29,7 +29,6 @@ export default function Home() {
       await getMintStatus()
     }, 5 * 1000)
     checkFreeMint()
-    checkTotalFreeMinted()
     getProof()
     console.log(rootHash)
   }
@@ -50,7 +49,6 @@ export default function Home() {
       disableInjectedProvider: false
     })
     checkFreeMint()
-    checkTotalFreeMinted()
     getTotalAndMaxSupply()
     onPageLoad()
   }, [walletConnected])
@@ -84,7 +82,7 @@ export default function Home() {
   }
 
   const handleIncrement = () => {
-    if(quantity < 2){
+    if(quantity < 1){
       return(
         setQuantity(quantity.add(1))
       )
@@ -132,21 +130,6 @@ export default function Home() {
     }
   }
 
-  const checkTotalFreeMinted = async() => {
-    try {
-      const provider = await getProviderOrSigner()
-      const bunniesContract = new Contract(
-        BUNNIES_CONTRACT_ADDRESS,
-        BUNNIES_CONTRACT_ABI,
-        provider
-      )
-      const totalFreeMinted = (await bunniesContract.totalFreeMinted()).toNumber()
-      console.log(totalFreeMinted)
-      setFreeMinted(totalFreeMinted)
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
   const callWhitelistMint = async() => {
     try {
@@ -156,26 +139,8 @@ export default function Home() {
         BUNNIES_CONTRACT_ABI,
         signer
       )
-      let mintPrice
-      if (freeMinted <= 900) {
-        if(quantity > 1) {
-          if(!mintedForFree) {
-            mintPrice = (utils.parseEther("0.007")).mul(quantity - 1)
-          } else {
-            mintPrice = (utils.parseEther("0.007").mul(quantity))
-          }
-        } else if(quantity == 1) {
-          if(!mintedForFree) {
-            mintPrice = utils.parseEther("0")
-          } else {
-            mintPrice = (utils.parseEther("0.007").mul(quantity))
-          } 
-        }
-      } else {
-        mintPrice = (utils.parseEther("0.007").mul(quantity))
-      }
-      
-      // const mintPrice = (utils.parseEther("0.007").mul(quantity))
+      const mintPrice = utils.parseEther("0").mul(quantity)
+
       const tx = await bunniesContract.mint(
         quantity,
         merkleProof,
@@ -203,7 +168,7 @@ export default function Home() {
         signer
       )
       
-      const mintPrice = (utils.parseEther("0.007").mul(quantity))
+      const mintPrice = (utils.parseEther("0").mul(quantity))
       const tx = await bunniesContract.publicMint(
         quantity,
         {
@@ -234,8 +199,6 @@ export default function Home() {
       const _maxSupply = (await bunniesContract.maxSupply()).toNumber()
       setMaxSupply(_maxSupply)
       setTotalAmountMinted(_totalSupply)
-      // console.log("max supply", maxSupply)
-      // console.log("total supply", totalAmountMinted)
     } catch (error) {
       console.log(error)
     }
@@ -365,7 +328,7 @@ export default function Home() {
               <p>Mint Stage : {renderMintStatus()} </p>
               <p>{totalAmountMinted + 50} / {maxSupply} have been minted</p>
             </div>
-            {(totalAmountMinted + 1999 >= maxSupply) ? renderSoldOut() : renderMint()}
+            {(totalAmountMinted + 50 >= maxSupply) ? renderSoldOut() : renderMint()}
           </div>
         </div>
       </div>
